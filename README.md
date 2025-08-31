@@ -65,9 +65,3 @@ This app uses the Foursquare Places API to fetch real restaurant data based on l
 
 - Restaurant results with ratings and pricing
 <img width="1921" height="892" alt="FOOD MOOD RESULTS" src="https://github.com/user-attachments/assets/c2d0bacc-1cee-4d62-bfa2-b3c4aab5625e" />
-
-## Contributing
-Pull requests are welcome! Please feel free to contribute to this project.
-
-## License
-This project is open source and available under the MIT License.
