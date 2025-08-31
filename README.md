@@ -1,4 +1,4 @@
-<img width="1921" height="909" alt="FOOD MOOD LIST OF CITIES" src="https://github.com/user-attachments/assets/7b0b9063-c7a7-4373-b649-6ed98e235ebc" /># 🍽️ Food Mood App
+# 🍽️ Food Mood App
 
 A Flask web application that recommends restaurants based on your current mood and location.
 
