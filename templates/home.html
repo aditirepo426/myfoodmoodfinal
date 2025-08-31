@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Food Mood - How are you feeling?{% endblock %}
+
+{% block content %}
+<div class="min-vh-100 home-bg">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6">
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-body p-5">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="display-5 fw-bold text-primary mb-2">
+                                    Welcome, {{ user.name }}! 👋
+                                </h1>
+                                <p class="text-muted lead">How are you feeling today?</p>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-2"></i>{{ user.name }}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Search Form -->
+                        <form method="POST" action="{{ url_for('search') }}" id="searchForm">
+                            <!-- City Selection -->
+                            <div class="mb-4">
+                                <label for="city" class="form-label fw-semibold">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    Select your city
+                                </label>
+                                <select class="form-select form-select-lg" name="city" id="city" required>
+                                    <option value="">Choose a city...</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city }}">{{ city }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Mood Selection -->
+                            <div class="mb-4">
+                                <label for="mood" class="form-label fw-semibold mb-3">
+                                    <i class="fas fa-smile text-primary me-2"></i>
+                                    How are you feeling?
+                                </label>
+                                
+                                <div class="row g-3">
+                                    {% for mood_key, mood_data in moods.items() %}
+                                    <div class="col-12">
+                                        <input type="radio" class="btn-check" name="mood" id="mood-{{ mood_key }}" value="{{ mood_key }}" required>
+                                        <label class="btn btn-outline-primary btn-lg w-100 mood-btn" for="mood-{{ mood_key }}">
+                                            <span class="mood-emoji">{{ mood_data.label.split()[1] }}</span>
+                                            <span class="mood-text">{{ mood_data.label.split()[0] }}</span>
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Search Button -->
+                            <button type="submit" class="btn btn-primary btn-lg w-100 search-btn" id="searchBtn">
+                                <i class="fas fa-search me-2"></i>
+                                <span class="btn-text">Find Food Places</span>
+                                <div class="spinner-border spinner-border-sm ms-2 d-none" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </form>
+
+                        <!-- Info Cards -->
+                        <div class="row mt-5">
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                        <i class="fas fa-map-marked-alt fa-lg text-primary"></i>
+                                    </div>
+                                    <h6 class="fw-semibold">Choose Location</h6>
+                                    <small class="text-muted">Select your city from our list</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                        <i class="fas fa-heart fa-lg text-success"></i>
+                                    </div>
+                                    <h6 class="fw-semibold">Pick Your Mood</h6>
+                                    <small class="text-muted">Tell us how you're feeling</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                        <i class="fas fa-utensils fa-lg text-warning"></i>
+                                    </div>
+                                    <h6 class="fw-semibold">Discover Food</h6>
+                                    <small class="text-muted">Get personalized recommendations</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchForm').addEventListener('submit', function() {
+    const btn = document.getElementById('searchBtn');
+    const spinner = btn.querySelector('.spinner-border');
+    const text = btn.querySelector('.btn-text');
+    
+    btn.disabled = true;
+    spinner.classList.remove('d-none');
+    text.textContent = 'Searching...';
+});
+</script>
+{% endblock %}

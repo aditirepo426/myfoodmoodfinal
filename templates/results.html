@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Food Mood - {{ mood_label }} Food in {{ city }}{% endblock %}
+
+{% block content %}
+<div class="min-vh-100 results-bg">
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h1 class="display-6 fw-bold text-primary mb-2">
+                                    {{ mood_label }} Food in {{ city }}
+                                </h1>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-utensils me-2"></i>
+                                    {{ restaurants|length }} places found for your mood
+                                </p>
+                            </div>
+                            <div class="d-flex gap-2 mt-3 mt-md-0">
+                                <a href="{{ url_for('home') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-search me-2"></i>New Search
+                                </a>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-user-circle me-2"></i>{{ user.name }}
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                        </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Restaurant Results -->
+        {% if restaurants %}
+        <div class="row g-4">
+            {% for restaurant in restaurants %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm border-0 rounded-3">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-primary mb-2">{{ restaurant.name }}</h5>
+                        <p class="text-info mb-3 fw-semibold">{{ restaurant.category }}</p>
+                        
+                        <!-- Rating -->
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="star-rating me-2">
+                                {% set rating = restaurant.rating | round | int %}
+                                {% for i in range(5) %}
+                                    {% if i < rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-muted"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="fw-semibold text-dark">{{ "%.1f"|format(restaurant.rating) }}</span>
+                        </div>
+                        
+                        <!-- Price Level -->
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="price-level me-2">
+                                {% for i in range(restaurant.price) %}
+                                    <i class="fas fa-dollar-sign text-success"></i>
+                                {% endfor %}
+                                {% for i in range(3 - restaurant.price) %}
+                                    <i class="far fa-circle text-muted"></i>
+                                {% endfor %}
+                            </div>
+                            <span class="text-muted small">
+                                {% if restaurant.price == 1 %}
+                                    Budget-friendly
+                                {% elif restaurant.price == 2 %}
+                                    Moderate pricing
+                                {% else %}
+                                    Premium dining
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <!-- Address -->
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            {{ restaurant.get('address', city) }}
+                        </p>
+                    </div>
+                    
+                    <!-- Card Footer -->
+                    <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-4">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>Perfect for your {{ mood_label.split()[0].lower() }} mood
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- No Results Found -->
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 bg-transparent text-center">
+                    <div class="card-body py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-search fa-4x text-muted opacity-50"></i>
+                        </div>
+                        <h3 class="text-white mb-3">No restaurants found</h3>
+                        <p class="text-white-50 mb-4">
+                            We couldn't find any {{ mood_label.lower() }} food places in {{ city }}.
+                            Try selecting a different city or mood!
+                        </p>
+                        <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Try Another Search
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
